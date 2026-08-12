@@ -10,11 +10,13 @@
 class Codec {
 public:
     void preOrder(TreeNode* root, string &s){
-        if(root==NULL){
+        if(root== NULL){
             s+= "#,";
             return;
         }
-        s+= to_string(root-> val)+ ",";
+        
+        s+= to_string(root-> val);
+        s+= ",";
 
         preOrder(root-> left, s);
         preOrder(root-> right, s);
@@ -24,26 +26,30 @@ public:
     string serialize(TreeNode* root) {
         string s;
         preOrder(root, s);
-
+        
         return s;
     }
     
-    TreeNode* buildTree(stringstream &ss){
+    TreeNode* build(stringstream &ss){
         string val;
-        getline(ss, val , ',');
+        getline(ss, val, ',');
 
-        if(val== "#") return NULL;
-
+        if(val== "#")
+            return NULL;
+        
         TreeNode* root= new TreeNode(stoi(val));
-        root-> left= buildTree(ss);
-        root-> right= buildTree(ss);
+
+        root-> left= build(ss);
+        root-> right= build(ss);
 
         return root;
     }
+
     // Decodes your encoded data to tree.
     TreeNode* deserialize(string data) {
         stringstream ss(data);
-        return buildTree(ss);
+
+        return build(ss);
     }
 };
 
