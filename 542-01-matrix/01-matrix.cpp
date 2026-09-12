@@ -1,40 +1,40 @@
 class Solution {
 public:
     vector<vector<int>> updateMatrix(vector<vector<int>>& mat) {
-        int m= mat.size();
-        int n= mat[0].size();
-        queue<pair<int, int>> q;
-        vector<vector<int>> dist(m, vector<int> (n, 0));
-        vector<vector<bool>> visited(m, vector<bool>(n, false));
+        int n= mat.size();
+        int m= mat[0].size();
 
-        int dr[]= {-1, 1, 0, 0};
-        int dc[]= {0, 0, -1, 1};
+        vector<vector<int>> vis(n, vector<int> (m, 0));
+        vector<vector<int>> dist(n, vector<int>(m, 0));
 
-        //push all zeros
-        for(int i=0; i< m; i++){
-            for(int j=0; j< n; j++){
-                if(mat[i][j]== 0){
-                    q.push({i,j});
-                    visited[i][j]= true;
+        queue<pair<pair<int, int>, int>> q;
+
+        for(int i=0; i<n; i++){
+            for(int j=0; j<m; j++){
+                if(mat[i][j]==0){
+                    q.push({{i, j}, 0});
+                    vis[i][j]= 1;
                 }
             }
         }
+        int drow[]= {-1, 0, 1, 0};
+        int dcol[]= {0, 1, 0 , -1};
+
         while(!q.empty()){
-            int row= q.front().first;
-            int col= q.front().second;
+            int row= q.front().first.first;
+            int col= q.front().first.second;
+            int step= q.front().second;
             q.pop();
 
-            for(int k=0; k<4; k++){
-                int newRow= row+ dr[k];
-                int newCol= col+ dc[k];
+            dist[row][col]= step;
 
-                if(newRow>=0 && newRow< m &&
-                newCol>=0 && newCol< n &&
-                !visited[newRow][newCol]){
-                    visited[newRow][newCol]= true;
-                    dist[newRow][newCol]= dist[row][col]+1;
-                    q.push({newRow, newCol});
+            for(int i=0; i< 4; i++){
+                int nrow= row+ drow[i];
+                int ncol= col+ dcol[i];
 
+                if(nrow>=0 && nrow<n && ncol>=0 && ncol<m && !vis[nrow][ncol]){
+                    vis[nrow][ncol]=1;
+                    q.push({{nrow, ncol}, step+1});
                 }
             }
         }
