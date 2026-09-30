@@ -1,29 +1,33 @@
 class Solution {
 public:
-    vector<string> mapping= {"", "", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
+    vector<string> ans;
 
-    void solve(int idx, string &digits, string &curr, vector<string>& ans){
-        if(idx== digits.size()){
-            ans.push_back(curr);
+    string mapping[10]= {"", "", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
+
+    void backtrack(string &digits, int index, string &current){
+        if(index== digits.size()){
+            ans.push_back(current);
             return;
         }
 
-        int digit= digits[idx]- '0';
-        string letters= mapping[digit];
+        string letters= mapping[digits[index]- '0'];
 
         for(char ch: letters){
-            curr.push_back(ch);
-            solve(idx+1, digits, curr, ans);
-            curr.pop_back();
+            current.push_back(ch);
+            backtrack(digits, index+1, current);
+
+            current.pop_back();
         }
     }
 
     vector<string> letterCombinations(string digits) {
-        vector<string> ans;
-        if(digits.size()== 0) return ans;
+        if(digits.empty()){
+            return {};
+        }
 
-        string curr= "";
-        solve(0, digits, curr, ans);
+        string current= "";
+        backtrack(digits, 0, current);
+        
         return ans;
     }
 };
