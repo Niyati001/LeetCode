@@ -1,35 +1,36 @@
 class Solution {
 public:
     string minWindow(string s, string t) {
-        vector<int> hash(256,0);
+        vector<int> freq(128, 0);
 
-        for(char c: t){
-            hash[c]++;
-        }
-        int l=0; int r=0;
-        int count= t.size();
-        int minLen= INT_MAX;
-        int start=0;
+        for (char c : t)
+            freq[c]++;
 
-        while(r< s.size()){
-            if(hash[s[r]]>0){
+        int left = 0, start = 0;
+        int count = t.size();
+        int minLen = INT_MAX;
+
+        for (int right = 0; right < s.size(); right++) {
+            if (freq[s[right]] > 0)
                 count--;
-            }
-            hash[s[r]]--;
 
-            while(count==0){
-                if(r-l+1< minLen){
-                    minLen= r-l+1;
-                    start=l;
+            freq[s[right]]--;
+
+            while (count == 0) {
+                if (right - left + 1 < minLen) {
+                    minLen = right - left + 1;
+                    start = left;
                 }
-                hash[s[l]]++;
-                if(hash[s[l]]>0){
+
+                freq[s[left]]++;
+
+                if (freq[s[left]] > 0)
                     count++;
-                }
-                l++;
+
+                left++;
             }
-            r++;
         }
+
         return minLen == INT_MAX ? "" : s.substr(start, minLen);
     }
 };
