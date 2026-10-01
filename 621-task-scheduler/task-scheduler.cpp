@@ -1,41 +1,21 @@
 class Solution {
 public:
     int leastInterval(vector<char>& tasks, int n) {
-        // frequency count
-        vector<int> freq(26,0);
-        for(char c: tasks){
-            freq[c- 'A']++;
+        vector<int> freq(26, 0);
+
+        for(char task: tasks){
+            freq[task- 'A']++;
         }
-        //max heap
-        priority_queue<int> pq;
+
+        int maxFreq= *max_element(freq.begin(), freq.end());
+        int countMax= 0;
+
         for(int f: freq){
-            if(f>0) pq.push(f);
+            if(f== maxFreq)
+                countMax++;
         }
-        //cooldown queue (remaining_freq, available_time)
-        queue<pair<int, int>> q;
-        int time=0;
-        
-        while(!pq.empty() || !q.empty()) {
-            time++;
-        
-            // release from cooldown
-            if(!q.empty() && q.front().second== time){
-                pq.push(q.front().first);
-                q.pop();
-            }
-        
-            //execute task if available
-            if(!pq.empty()){
-                int f= pq.top();
-                pq.pop();
+        int intervals= (maxFreq-1)*(n+1)+ countMax;
 
-                f--; //used once
-
-            if(f>0){
-                q.push({f, time+n+1});
-            }
-        }
-    }
-    return time;
+        return max((int)tasks.size(), intervals);
     }
 };
