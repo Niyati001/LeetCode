@@ -1,51 +1,50 @@
 class Solution {
 public:
-    int firstOccurence(vector<int> &nums, int target){
-        int low=0;
-        int high= nums.size()-1;
-        int first=-1;
+    int findFirst(vector<int>& nums, int target){
+        int left=0;
+        int right= nums.size()-1;
+        int ans=-1;
 
-        while(low<= high){
-            int mid= low+ (high- low)/2;
+        while(left<= right){
+            int mid= left+ (right-left)/2;
+
             if(nums[mid]== target){
-                first= mid;
-                high= mid-1;
+                ans= mid;
+                right= mid-1;
             }
-            else if (nums[mid] > target) {
-                high = mid - 1;
+            else if(nums[mid]< target){
+                left= mid+1;
             }
             else{
-                low= mid+1;
+                right= mid-1;
             }
         }
-        return first;
+        return ans;
     }
-    int lastOccurence(vector<int> &nums, int target){
-        int low=0;
-        int high= nums.size()-1;
-        int last=-1;
 
-        while(low<= high){
-            int mid= low+ (high- low)/2;
+    int findLast(vector<int>& nums, int target){
+        int left=0;
+        int right= nums.size()-1;
+        int ans=-1;
+
+        while(left<= right){
+            int mid= left+ (right- left)/2;
 
             if(nums[mid]== target){
-                last= mid;
-                low= mid+1;
+                ans= mid;
+                left= mid+1;
             }
-            else if (nums[mid] > target) {
-                high = mid - 1;
+            else if(nums[mid]< target){
+                left= mid+1;
             }
             else{
-                low= mid+1;
+                right= mid-1;
             }
         }
-        return last;
+        return ans;
     }
 
     vector<int> searchRange(vector<int>& nums, int target) {
-        int first= firstOccurence(nums, target);
-        if(first==-1) return {-1,-1};
-        int last= lastOccurence(nums, target);
-        return {first, last};
+        return {findFirst(nums, target), findLast(nums, target)};
     }
 };
