@@ -10,21 +10,24 @@
  * };
  */
 class Solution {
-public: 
+public:
     int ans= INT_MIN;
 
-    int solve(TreeNode* root){
-        if(!root) return 0;
+    int dfs(TreeNode* root){
+        if(root== NULL)
+            return 0;
 
-        int leftS= max(0, solve(root-> left));
-        int rightS= max(0, solve(root-> right));
-        
-        ans= max(ans, leftS+ rightS+ root-> val);
-        return root-> val + max(leftS, rightS);
+        int left= max(0, dfs(root-> left));
+        int right= max(0, dfs(root-> right));
+
+        int pathSum= root-> val+ left+ right;
+        ans= max(ans, pathSum);
+
+        return root-> val+ max(left, right);
     }
-
     int maxPathSum(TreeNode* root) {
-        solve(root);
+        dfs(root);
+
         return ans;
     }
 };
