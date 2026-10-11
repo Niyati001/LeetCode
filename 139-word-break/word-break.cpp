@@ -1,25 +1,20 @@
 class Solution {
 public:
-    bool solve(int i, string &s, unordered_set<string> &dict, vector<int>& dp){
-        if(i== s.size()) return true;
-        if(dp[i]!= -1) return dp[i];
+    bool wordBreak(string s, vector<string>& wordDict) {
+        unordered_set<string> dict(wordDict.begin(), wordDict.end());
 
-        string curr= "";
-        for(int j=i; j< s.size(); j++){
-            curr+=s[j];
+        int n= s.size();
+        vector<bool> dp(n+1, false);
+        dp[0]= true;
 
-            if(dict.count(curr)){
-                if(solve(j+1, s, dict, dp)){
-                    return dp[i]= true;
+        for(int i=0; i<=n; i++){
+            for(int j=0; j<i; j++){
+                if(dp[j] && dict.count(s.substr(j, i-j))){
+                    dp[i]= true;
+                    break;
                 }
             }
         }
-        return dp[i]= false;
-    }
-
-    bool wordBreak(string s, vector<string>& wordDict) {
-        unordered_set<string> dict(wordDict.begin(), wordDict.end());
-        vector<int> dp(s.size(), -1);
-        return solve(0, s, dict, dp);
+        return dp[n];
     }
 };
