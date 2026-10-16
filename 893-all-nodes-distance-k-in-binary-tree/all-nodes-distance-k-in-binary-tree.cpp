@@ -1,3 +1,4 @@
+
 /**
  * Definition for a binary tree node.
  * struct TreeNode {
@@ -7,68 +8,66 @@
  *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
  * };
  */
+
 class Solution {
 public:
+    unordered_map<TreeNode*, TreeNode*> parent;
+
+    void buildParent(TreeNode* node, TreeNode* par) {
+        if (!node) return;
+
+        parent[node] = par;
+
+        buildParent(node->left, node);
+        buildParent(node->right, node);
+    }
+
     vector<int> distanceK(TreeNode* root, TreeNode* target, int k) {
-        unordered_map<TreeNode*, TreeNode*> parent;
+        buildParent(root, nullptr);
+
         queue<TreeNode*> q;
+        unordered_set<TreeNode*> visited;
 
-        q.push(root);
-
-        while(!q.empty()){
-            TreeNode* node= q.front();
-            q.pop();
-
-            if(node-> left){
-                parent[node-> left]= node;
-                q.push(node-> left);
-            }
-
-            if(node-> right){
-                parent[node-> right]= node;
-                q.push(node-> right);
-            }
-        }
-
-        unordered_map<TreeNode*, bool> vis;
         q.push(target);
-        vis[target]= true;
+        visited.insert(target);
 
-        int dist= 0;
+        int distance = 0;
 
-        while(!q.empty()){
-            if(dist== k)
-                break;
-            
-            int size= q.size();
+        while (!q.empty()) {
+            int sz = q.size();
 
-            while(size--){
-                TreeNode* node= q.front();
+            if (distance == k) {
+                vector<int> ans;
+
+                while (!q.empty()) {
+                    ans.push_back(q.front()->val);
+                    q.pop();
+                }
+
+                return ans;
+            }
+
+            while (sz--) {
+                TreeNode* node = q.front();
                 q.pop();
 
-                if(node-> left && !vis[node-> left]){
-                    vis[node-> left]= true;
-                    q.push(node-> left);
-                }
+                vector<TreeNode*> neighbors = {
+                    node->left,
+                    node->right,
+                    parent[node]
+                };
 
-                if(node-> right && !vis[node-> right]){
-                    vis[node-> right]= true;
-                    q.push(node-> right);
-                }
-
-                if(parent[node] && !vis[parent[node]]){
-                    vis[parent[node]]= true;
-                    q.push(parent[node]);
+                for (TreeNode* next : neighbors) {
+                    if (next && !visited.count(next)) {
+                        visited.insert(next);
+                        q.push(next);
+                    }
                 }
             }
-            dist++;
-        }
-        vector<int> ans;
 
-        while(!q.empty()){
-            ans.push_back(q.front()-> val);
-            q.pop();
+            distance++;
         }
-        return ans;
+
+        return {};
     }
 };
