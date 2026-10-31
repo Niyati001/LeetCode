@@ -1,26 +1,32 @@
 class Solution {
 public:
     vector<string> topKFrequent(vector<string>& words, int k) {
-
         unordered_map<string, int> freq;
 
-        for (string word : words)
+        for(string word: words){
             freq[word]++;
+        }
 
-        vector<string> arr;
+        vector<string> v;
 
-        for (auto x : freq)
-            arr.push_back(x.first);
+        for(auto it: freq){
+            v.push_back(it.first);
+        }
 
-        sort(arr.begin(), arr.end(), [&](string a, string b) {
-            if (freq[a] != freq[b])
-                return freq[a] > freq[b];
+        sort(v.begin(), v.end(), [&](string a, string b){
+            if(freq[a]== freq[b]){
+                return a< b;
+            }
 
-            return a < b;
+            return freq[a]> freq[b];
         });
 
-        arr.resize(k);
+        vector<string> ans;
 
-        return arr;
+        for(int i= 0; i< k; i++) {
+            ans.push_back(v[i]);
+        }
+
+        return ans;
     }
 };
