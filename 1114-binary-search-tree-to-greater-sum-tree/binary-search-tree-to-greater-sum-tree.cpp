@@ -13,15 +13,21 @@ class Solution {
 public:
     int sum=0;
 
+    void reverseInorder(TreeNode* root){
+        if(root== nullptr)
+            return;
+
+        reverseInorder(root-> right);
+
+        sum+= root->val;
+        root->val= sum;
+
+        reverseInorder(root-> left);
+    }
+
+
     TreeNode* bstToGst(TreeNode* root) {
-        if(root== NULL) return root;
-
-        bstToGst(root-> right);
-
-        sum+= root-> val;
-        root-> val= sum;
-
-        bstToGst(root-> left);
+        reverseInorder(root);
 
         return root;
     }
